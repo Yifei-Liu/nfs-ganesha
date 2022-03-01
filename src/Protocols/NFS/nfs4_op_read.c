@@ -77,6 +77,7 @@ typedef enum io_direction__ {
 
 static enum nfs_req_result nfs4_complete_read(struct nfs4_read_data *data)
 {
+	//fprintf(stdout, "[ASSERTION] enter into nfs4_complete_read\n");
 	struct fsal_io_arg *read_arg = &data->read_arg;
 
 	if (data->res_READ4->status == NFS4_OK) {
