@@ -77,9 +77,10 @@ typedef enum io_direction__ {
 
 static enum nfs_req_result nfs4_complete_read(struct nfs4_read_data *data)
 {
-	//fprintf(stdout, "[ASSERTION] enter into nfs4_complete_read\n");
+	fprintf(stdout, "[ASSERTION] enter into nfs4_complete_read\n");
 	struct fsal_io_arg *read_arg = &data->read_arg;
 
+	assert(data->res_READ4->status == NFS4_OK);
 	if (data->res_READ4->status == NFS4_OK) {
 		if (!read_arg->end_of_file) {
 			/** @todo FSF: add a config option for this behavior?
@@ -130,6 +131,9 @@ static enum nfs_req_result nfs4_complete_read(struct nfs4_read_data *data)
 
 		data->res_READ4->READ4res_u.resok4.data.data_val = NULL;
 	}
+
+	assert(data->res_READ4->READ4res_u.resok4.data.data_len == 0);
+	assert(data->res_READ4->READ4res_u.resok4.eof);
 
 	server_stats_io_done(read_arg->iov[0].iov_len, read_arg->io_amount,
 			     (data->res_READ4->status == NFS4_OK) ? true :
@@ -589,6 +593,8 @@ static enum nfs_req_result nfs4_read(struct nfs_argop4 *op,
 	/* Get the size and offset of the read operation */
 	offset = arg_READ4->offset;
 	size = arg_READ4->count;
+
+	assert(offset >= size);
 
 	if (MaxOffsetRead < UINT64_MAX) {
 		LogFullDebug(COMPONENT_NFS_V4,

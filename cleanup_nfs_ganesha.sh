@@ -25,18 +25,3 @@ fi
 if [ -f $LOG_FILE ]; then
     rm $LOG_FILE
 fi
-
-if [ -d $SERVER_DIR ]; then
-    rm -rf $SERVER_DIR
-fi
-
-mkdir $SERVER_DIR
-
-if [ -d $CLIENT_DIR ]; then
-    rm -rf $CLIENT_DIR
-fi
-
-mkdir $CLIENT_DIR
-
-sudo $NFSD_EXE -F -f $CONF_FILE -L $LOG_FILE
-#mount -t nfs -o vers=4 127.0.0.1:/vfs0 /tcserver
